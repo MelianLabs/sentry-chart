@@ -8,7 +8,7 @@ steps:
 - name: 'docker/compose'
   args: ['up', '-d', 'redis']
 - name: 'docker/compose'
-  args: ['run','sentry', 'sentry', 'upgrade']
+  args: ['up', '-d', 'sentry']
 
 # Tagging docker images
 - name: 'gcr.io/cloud-builders/docker'
