@@ -1,8 +1,8 @@
 #! /bin/sh
 
 set -a 
-chmod +x ../vars.sh
-source ../vars.sh
+chmod +x vars.sh
+source vars.sh
 set +a
 
 echo TF_VAR_bucket_name $TF_VAR_bucket_name
@@ -23,13 +23,13 @@ for service in "${services[@]}"; do
   gcloud services enable "${service}"
 done
 
-docker-compose up -d postgres
-docker-compose up -d redis
-docker-compose run sentry sentry upgrade
+# docker-compose up -d postgres
+# docker-compose up -d redis
+# docker-compose run sentry sentry upgrade
 
-docker-compose up -d
+# docker-compose up -d
 
-terraform init
-terraform apply --auto-approve
 
-sed -i "s/PROJECT_ID/$TF_VAR_project/g" ../manifest/deployment.yaml
+sed -i "s/PROJECT_ID/$TF_VAR_project/g" /manifest/deployment.yaml
+sed -i "s/${SENTRY_TAG}/$SENTRY_TAG/g" /docker-compose.yaml
+sed -i "s/${SECRET}/$SECRET/g" /docker-compose.yaml
