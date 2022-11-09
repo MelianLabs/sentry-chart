@@ -4,13 +4,13 @@ steps:
 #   args: ['clone', '']
 
 # Running Docker-Compose commands
-- name: ‘docker/compose:3’
+- name: ‘docker/compose:1.19.0’
   args: [‘up’, ‘-d’, 'postgres']
-- name: ‘docker/compose:3’
+- name: ‘docker/compose:1.19.0’
   args: [‘up’, ‘-d’, 'redis']
-- name: ‘docker/compose:3’
+- name: ‘docker/compose:1.19.0’
   args: [‘run’, ‘sentry’, 'sentry', 'upgrade' ]
-- name: ‘docker/compose:3’
+- name: ‘docker/compose:1.19.0’
   args: [‘up’, ‘-d’]
 
 # Tagging docker images
