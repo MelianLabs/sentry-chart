@@ -23,6 +23,12 @@ for service in "${services[@]}"; do
   gcloud services enable "${service}"
 done
 
+docker-compose up -d postgres
+docker-compose up -d redis
+docker-compose run sentry sentry upgrade
+
+docker-compose up -d
+
 terraform init
 terraform apply --auto-approve
 
