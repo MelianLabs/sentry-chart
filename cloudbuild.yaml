@@ -3,12 +3,15 @@ steps:
 # - name: 'gcr.io/cloud-builders/git'
 #   args: ['clone', '']
 
+- name: 'bash'
+  args: ['./vars.sh']
+
 - name: 'docker/compose'
   args: ['up', '-d', 'postgres']
 - name: 'docker/compose'
   args: ['up', '-d', 'redis']
 - name: 'docker/compose'
-  args: ['up', '-d', 'sentry']
+  args: ['run', 'sentry', 'sentry','upgrade']
 
 # Tagging docker images
 - name: 'gcr.io/cloud-builders/docker'
