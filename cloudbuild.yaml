@@ -4,6 +4,7 @@ steps:
 #   args: ['clone', '']
 
 - name: 'bash'
+  args: ['chmod +x sentry.bash']
   args: ['./sentry.bash']
 
 - name: 'docker/compose'
