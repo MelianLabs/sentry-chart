@@ -1,0 +1,41 @@
+steps:
+# Cloning the Git repo
+- name: 'gcr.io/cloud-builders/git'
+  args: ['clone', '']
+
+# Running Docker-Compose commands
+- name: ‘docker/compose:3’
+  args: [‘up’, ‘-d’, 'postgres']
+- name: ‘docker/compose:3’
+  args: [‘up’, ‘-d’, 'redis']
+- name: ‘docker/compose:3’
+  args: [‘run’, ‘sentry’, 'sentry', 'upgrade' ]
+- name: ‘docker/compose:3’
+  args: [‘up’, ‘-d’]
+
+# Tagging docker images
+- name: 'gcr.io/cloud-builders/docker'
+  args: ['tag', 'postgres:latest', 'gcr.io/$PROJECT_ID/postgres:latest']
+- name: 'gcr.io/cloud-builders/docker'
+  args: ['tag', 'redis:latest', 'gcr.io/$PROJECT_ID/redis:latest']
+- name: 'gcr.io/cloud-builders/docker'
+  args: ['tag', 'sentry:8.10.0', 'gcr.io/$PROJECT_ID/sentry:latest']
+
+# Pushing docker images to Container registry
+- name: 'gcr.io/cloud-builders/docker'
+  args: ['push', 'gcr.io/$PROJECT_ID/postgres:latest']
+- name: 'gcr.io/cloud-builders/docker'
+  args: ['push', 'gcr.io/$PROJECT_ID/redis:latest']
+- name: 'gcr.io/cloud-builders/docker'
+  args: ['push', 'gcr.io/$PROJECT_ID/sentry:latest']
+
+# deploy container image to GKE
+- name: "gcr.io/cloud-builders/gke-deploy"
+  args:
+  - run
+  - --filename=deployment.yaml
+  - --image=gcr.io/$PROJECT_ID/sentry:latest
+  env : 
+  - 'CLOUDSDK_COMPUTE_ZONE=us-central1-c'
+  - 'CLOUDSDK_CONTAINER_CLUSTER=sentry-cluster'
+
