@@ -3,8 +3,11 @@ steps:
 # - name: 'gcr.io/cloud-builders/git'
 #   args: ['clone', '']
 
-- name: 'bash'
-  args: ['./vars.sh']
+- name: bash
+  script: |
+    #!/usr/bin/env bash
+    export SENTRY_TAG="8.10.0"
+    export SECRET="j44@64jw0oi_smeool!(r%6)c%5bb1m5==j^-n1#hi4f-v2i53"
 
 - name: 'docker/compose'
   args: ['up', '-d', 'postgres']
