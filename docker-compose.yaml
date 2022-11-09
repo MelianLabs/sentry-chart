@@ -1,12 +1,12 @@
 version: "3"
 services:
   redis:
-    image: redis:latest
+    image: redis:3.0.7
     networks:
     - sentry-net
 
   postgres:
-    image: postgres:latest
+    image: postgres:9.6.1
     environment:
     - POSTGRES_USER:sentry
     - POSTGRES_PASSWORD:sentry

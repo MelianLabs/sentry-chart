@@ -15,7 +15,6 @@ echo SECRET $SECRET
 services=(
  containerregistry.googleapis.com
  container.googleapis.com
- cloudbuild.googleapis.com
 )
 
 for service in "${services[@]}"; do
@@ -47,6 +46,6 @@ terraform apply --auto-approve
 # Sentry Deployment
 sed -i "s/PROJECT_ID/$TF_VAR_project/g" ../manifest/deployment.yaml
 
-gcloud container clusters get-credentials $TF_VAR_cluster_name --zone us-central1-c --project $GOOGLE_CLOUD_PROJECT
+gcloud container clusters get-credentials $TF_VAR_cluster_name --region us-central1 --project $GOOGLE_CLOUD_PROJECT
 
-kubectl apply -f deployment.yaml
+kubectl apply -f ../manifest/deployment.yaml
