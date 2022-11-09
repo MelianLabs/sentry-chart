@@ -3,11 +3,11 @@ steps:
 # - name: 'gcr.io/cloud-builders/git'
 #   args: ['clone', '']
 
-- name: 'gcr.io/${_GOOGLE_CLOUD_PROJECT}/docker-compose'
+- name: 'docker/compose'
   args: ['up', '-d', 'postgres']
-- name: 'gcr.io/${_GOOGLE_CLOUD_PROJECT}/docker-compose'
+- name: 'docker/compose'
   args: ['up', '-d', 'redis']
-- name: 'gcr.io/${_GOOGLE_CLOUD_PROJECT}/docker-compose'
+- name: 'docker/compose'
   args: ['run','sentry', 'sentry', 'upgrade']
 
 # Tagging docker images
