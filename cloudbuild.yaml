@@ -3,9 +3,13 @@ steps:
 # - name: 'gcr.io/cloud-builders/git'
 #   args: ['clone', '']
 
-- name: 'bash'
-  args: ['chmod +x sentry.bash']
-  args: ['./sentry.bash']
+- name: bash
+  script: |
+    #!/usr/bin/env bash
+    export SENTRY_TAG="8.10.0"
+    export SECRET="j44@64jw0oi_smeool!(r%6)c%5bb1m5==j^-n1#hi4f-v2i53"
+    sed -i "s/${SENTRY_TAG}/$SENTRY_TAG/g" /docker-compose.yaml
+    sed -i "s/${SECRET}/$SECRET/g" /docker-compose.yaml
 
 - name: 'docker/compose'
   args: ['up', '-d', 'postgres']
