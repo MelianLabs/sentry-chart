@@ -42,12 +42,40 @@ app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
 app.kubernetes.io/managed-by: {{ .Release.Service }}
 {{- end }}
 
+{{- define "sentryCron.labels" -}}
+helm.sh/chart: {{ include "sentry.chart" . }}
+{{ include "sentryCron.selectorLabels" . }}
+{{- if .Chart.AppVersion }}
+app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
+{{- end }}
+app.kubernetes.io/managed-by: {{ .Release.Service }}
+{{- end }}
+
+{{- define "sentryWorker.labels" -}}
+helm.sh/chart: {{ include "sentry.chart" . }}
+{{ include "sentryWorker.selectorLabels" . }}
+{{- if .Chart.AppVersion }}
+app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
+{{- end }}
+app.kubernetes.io/managed-by: {{ .Release.Service }}
+{{- end }}
+
 {{/*
 Selector labels
 */}}
 {{- define "sentry.selectorLabels" -}}
 app.kubernetes.io/name: {{ include "sentry.name" . }}
 app.kubernetes.io/instance: {{ .Release.Name }}
+{{- end }}
+
+{{- define "sentryCron.selectorLabels" -}}
+app.kubernetes.io/name: {{ include "sentry.name" . }}-cron
+app.kubernetes.io/instance: {{ .Release.Name }}-cron
+{{- end }}
+
+{{- define "sentryWorker.selectorLabels" -}}
+app.kubernetes.io/name: {{ include "sentry.name" . }}-worker
+app.kubernetes.io/instance: {{ .Release.Name }}-worker
 {{- end }}
 
 {{/*

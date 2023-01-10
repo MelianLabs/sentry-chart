@@ -16,7 +16,7 @@ fullnameOverride: ""
 
 environmentVariables:
  - name: SENTRY_POSTGRES_HOST
-   value: 'postgres-postgresql'
+   value: 'sentry-postgresql'
 # - name: SENTRY_DB_NAME
 #   value: 'sentry'
  - name: SENTRY_DB_USER
@@ -26,18 +26,15 @@ environmentVariables:
  - name: SENTRY_DB_PASSWORD 
    valueFrom:
      secretKeyRef:
-       name: 'postgres-postgresql'
+       name: 'sentry-postgresql'
        key: 'postgres-password'
-# - name: SENTRY_REDIS_PASSWORD
-#   valueFrom:
-#     secretKeyRef:
-#       name: 'redis'
-#       key: 'redis-password'
+ - name: SENTRY_REDIS_PASSWORD 
+   valueFrom:
+     secretKeyRef:
+       name: 'sentry-redis'
+       key: 'redis-password'
  - name: SENTRY_REDIS_HOST
-   value: 'redis-master'
-#SENTRY_POSTGRES_HOST
-#SENTRY_POSTGRES_HOST, SENTRY_POSTGRES_PORT, SENTRY_DB_NAME, SENTRY_DB_USER, SENTRY_DB_PASSWORD
-#SENTRY_REDIS_HOST, SENTRY_REDIS_PORT, SENTRY_REDIS_DB
+   value: 'sentry-redis-master'
 
 serviceAccount:
   # Specifies whether a service account should be created
@@ -53,13 +50,13 @@ podAnnotations: {}
 podSecurityContext: {}
   # fsGroup: 2000
 
-securityContext: {}
+securityContext: 
+  runAsUser: 999
   # capabilities:
   #   drop:
   #   - ALL
   # readOnlyRootFilesystem: true
   # runAsNonRoot: true
-  # runAsUser: 1000
 
 sentryWeb:
   command:
@@ -117,3 +114,7 @@ nodeSelector: {}
 tolerations: []
 
 affinity: {}
+
+postgresql:
+  image:
+    tag: "12.9.0-debian-10-r87" 
