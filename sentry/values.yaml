@@ -61,10 +61,17 @@ securityContext: {}
   # runAsNonRoot: true
   # runAsUser: 1000
 
-sentryCommand:
-  - "/bin/sh"
-  - "-c"
-  - "sentry upgrade --noinput && sentry run web"
+sentryWeb:
+  command:
+    - "/bin/sh"
+    - "-c"
+    - "sentry upgrade --noinput && sentry run web"
+
+sentryWorker:
+  command:
+    - "/bin/sh"
+    - "-c"
+    - "sentry upgrade --noinput && sentry run worker"
 
 service:
   type: ClusterIP
