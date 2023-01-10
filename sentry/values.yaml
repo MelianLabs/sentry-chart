@@ -1,0 +1,112 @@
+# Default values for sentry.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+replicaCount: 1
+
+image:
+  repository: sentry
+  pullPolicy: IfNotPresent
+  # Overrides the image tag whose default is the chart appVersion.
+  tag: "8.10.0"
+
+imagePullSecrets: []
+nameOverride: ""
+fullnameOverride: ""
+
+environmentVariables:
+ - name: SENTRY_POSTGRES_HOST
+   value: 'postgres-postgresql'
+# - name: SENTRY_DB_NAME
+#   value: 'sentry'
+ - name: SENTRY_DB_USER
+   value: 'postgres'
+ - name: 'SENTRY_SECRET_KEY'
+   value: "j44@64jw0oi_smeool!(r%6)c%5bb1m5==j^-n1#hi4f-v2i53"
+ - name: SENTRY_DB_PASSWORD 
+   valueFrom:
+     secretKeyRef:
+       name: 'postgres-postgresql'
+       key: 'postgres-password'
+# - name: SENTRY_REDIS_PASSWORD
+#   valueFrom:
+#     secretKeyRef:
+#       name: 'redis'
+#       key: 'redis-password'
+ - name: SENTRY_REDIS_HOST
+   value: 'redis-master'
+#SENTRY_POSTGRES_HOST
+#SENTRY_POSTGRES_HOST, SENTRY_POSTGRES_PORT, SENTRY_DB_NAME, SENTRY_DB_USER, SENTRY_DB_PASSWORD
+#SENTRY_REDIS_HOST, SENTRY_REDIS_PORT, SENTRY_REDIS_DB
+
+serviceAccount:
+  # Specifies whether a service account should be created
+  create: true
+  # Annotations to add to the service account
+  annotations: {}
+  # The name of the service account to use.
+  # If not set and create is true, a name is generated using the fullname template
+  name: ""
+
+podAnnotations: {}
+
+podSecurityContext: {}
+  # fsGroup: 2000
+
+securityContext: {}
+  # capabilities:
+  #   drop:
+  #   - ALL
+  # readOnlyRootFilesystem: true
+  # runAsNonRoot: true
+  # runAsUser: 1000
+
+sentryCommand:
+  - "/bin/sh"
+  - "-c"
+  - "sentry upgrade --noinput && sentry run web"
+
+service:
+  type: ClusterIP
+  port: 9000
+
+ingress:
+  enabled: false
+  className: ""
+  annotations: {}
+    # kubernetes.io/ingress.class: nginx
+    # kubernetes.io/tls-acme: "true"
+  hosts:
+    - host: chart-example.local
+      paths:
+        - path: /
+          pathType: ImplementationSpecific
+  tls: []
+  #  - secretName: chart-example-tls
+  #    hosts:
+  #      - chart-example.local
+
+resources: {}
+  # We usually recommend not to specify default resources and to leave this as a conscious
+  # choice for the user. This also increases chances charts run on environments with little
+  # resources, such as Minikube. If you do want to specify resources, uncomment the following
+  # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+  # limits:
+  #   cpu: 100m
+  #   memory: 128Mi
+  # requests:
+  #   cpu: 100m
+  #   memory: 128Mi
+
+autoscaling:
+  enabled: false
+  minReplicas: 1
+  maxReplicas: 100
+  targetCPUUtilizationPercentage: 80
+  # targetMemoryUtilizationPercentage: 80
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}
