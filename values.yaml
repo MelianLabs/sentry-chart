@@ -17,8 +17,6 @@ fullnameOverride: ""
 environmentVariables:
  - name: SENTRY_POSTGRES_HOST
    value: 'sentry-postgresql'
-# - name: SENTRY_DB_NAME
-#   value: 'sentry'
  - name: SENTRY_DB_USER
    value: 'postgres'
  - name: 'SENTRY_SECRET_KEY'
