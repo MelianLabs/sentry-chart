@@ -113,6 +113,56 @@ tolerations: []
 
 affinity: {}
 
+clickHouse:
+  nameOverride: "clickhouse"
+  image:
+    repository: yandex/clickhouse-server
+    tag: 20.3.9.70
+    pullPolicy: ""
+  podAnnotations: {}
+  imagePullSecrets: []
+  serviceAccount:
+    name: clickhouse
+  environmentVariables:
+  - name: MAX_MEMORY_USAGE_RATIO
+    value: "0.3"
+  service:
+  - name: clickhouse-9000
+    port: 9000
+    protocol: TCP
+    targetPort: 9009
+  - name: clickhouse-9009
+    port: 9009
+    protocol: TCP
+    targetPort: 9009
+  - name: clickhouse-8123
+    port: 8123
+    protocol: TCP
+    targetPort: 8123
+  volumes:
+  - name: clickhouse
+    mountPath: /var/lib/clickhouse
+  volumeClaimTemplates: 
+   - metadata:
+      name: clickhouse
+     spec:
+       accessModes: [ "ReadWriteOnce" ]
+       storageClassName: "standard-rwo"
+       resources:
+         requests:
+           storage: 10Gi 
+ # - apiVersion: v1
+ #   kind: PersistentVolumeClaim
+ #   metadata:
+ #     creationTimestamp: null
+ #     name: clickHouse
+ #   spec:
+ #     accessModes:
+ #       - ReadWriteOnce
+ #     resources:
+ #       requests:
+ #         storage: 8Gi
+ #     volumeMode: Filesystem
 postgresql:
   image:
-    tag: "12.9.0-debian-10-r87" 
+    tag: "12.9.0-debian-10-r87"
