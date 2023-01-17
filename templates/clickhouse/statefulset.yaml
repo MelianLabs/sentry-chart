@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: {{ include "sentry.clickHouse.fullname" . }}
+  labels:
+     {{- include "sentry.clickHouse.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.clickHouse.replicaCount }}
+  serviceName: {{ include "sentry.clickHouse.fullname" . }}
+  selector:
+    matchLabels:
+      {{- include "sentry.clickHouse.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      {{- with .Values.clickHouse.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+        {{- include "sentry.clickHouse.selectorLabels" . | nindent 8 }}
+    spec:
+      containers:
+      - env:
+        {{- toYaml .Values.clickHouse.environmentVariables | nindent 8 }}
+        image: "{{ .Values.clickHouse.image.repository }}:{{ .Values.clickHouse.image.tag | default .Chart.AppVersion }}"
+        imagePullPolicy: IfNotPresent
+        name: {{ include "sentry.clickHouse.fullname" . }}
+        ports:
+          {{- toYaml .Values.clickHouse.containerPorts | nindent 8 }}
+        volumeMounts:
+          {{- toYaml .Values.clickHouse.volumes | nindent 8 }} 
+      dnsPolicy: ClusterFirst
+      restartPolicy: Always
+      schedulerName: default-scheduler
+      serviceAccountName: {{ include "sentry.clickHouse.serviceAccountName" . }}
+  updateStrategy:
+    rollingUpdate:
+      partition: 0
+    type: RollingUpdate
+  volumeClaimTemplates:
+  {{- toYaml .Values.clickHouse.volumeClaimTemplates | nindent 2 }} 

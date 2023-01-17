@@ -126,6 +126,10 @@ clickHouse:
   environmentVariables:
   - name: MAX_MEMORY_USAGE_RATIO
     value: "0.3"
+  containerPorts:
+  - containerPort: 9000
+  - containerPort: 9009
+  - containerPort: 8123
   service:
   - name: clickhouse-9000
     port: 9000
